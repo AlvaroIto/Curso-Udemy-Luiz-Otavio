@@ -40,3 +40,22 @@ print()
 
 for chave in pessoa:
     print(chave, pessoa[chave])
+
+
+# Métodos úteis dos dicionários em Python
+
+# len - quantas chaves
+print(len(pessoa))
+# keys - iterável com as chaves
+print(list(pessoa.keys()))
+# values - iterável com os valores
+print(list(pessoa.values()))
+# items - iterável com chaves e valores
+print(list(pessoa.items()))
+# setdefault - adiciona valor se a chave não existe
+pessoa.setdefault('idade', 0)
+# copy - retorna uma cópia rasa (shallow copy)
+# get - obtém uma chave
+# pop - Apaga um item com a chave especificada (del)
+# popitem - Apaga o último item adicionado
+# update - Atualiza um dicionário com outro
