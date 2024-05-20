@@ -56,6 +56,7 @@ print(list(pessoa.items()))
 pessoa.setdefault('idade', 0)
 # copy - retorna uma cópia rasa (shallow copy)
 # get - obtém uma chave
+print(pessoa.get('nome'))
 # pop - Apaga um item com a chave especificada (del)
 # popitem - Apaga o último item adicionado
 # update - Atualiza um dicionário com outro
