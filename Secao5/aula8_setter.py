@@ -35,4 +35,4 @@ caneta = Caneta('Azul')
 caneta.cor = 'Rosa'
 caneta.cor_tampa = 'Azul'
 print(caneta.cor)
-print(caneta.cor_tampa)
+print(caneta.cor_tampa) 
