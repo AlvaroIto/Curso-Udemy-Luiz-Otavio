@@ -1,6 +1,7 @@
 # QWidget e QLayout de PySide6.QtWidgets
 # QWidget -> genérico
 # QLayout -> Um widget de layout que recebe outros widgets
+'''
 import sys
 
 from PySide6.QtWidgets import QApplication, QGridLayout, QPushButton, QWidget
@@ -27,3 +28,4 @@ layout.addWidget(botao3, 3, 1, 1, 2)
 
 central_widget.show()  # Central widget entre na hierarquia e mostre sua janela
 app.exec()  # O loop da aplicação
+'''
