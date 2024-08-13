@@ -1,17 +1,21 @@
 import sys
-from PySide6.QtWidgets import QApplication, QLabel
+
+from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QIcon
 from main_window import MainWindow
+from buttons import ButtonsGrid
+from display import Display
+from info import Info
+from styles import setupTheme
 from variables import WINDOW_ICON_PATH
 
-def temp_label(texto):
-    label1 = QLabel(texto)
-    label1.setStyleSheet('font-size: 50px;')
-    return label1
+
 
 if __name__ == '__main__':
+
     #Cria a aplicação
     app = QApplication(sys.argv)
+    setupTheme(app)
     window = MainWindow()
 
     #Define o ícone
@@ -19,6 +23,20 @@ if __name__ == '__main__':
     window.setWindowIcon(icon)
     app.setWindowIcon(icon)
 
+    #Info
+    info = Info('2.0 ^ 10.0 = 1024')
+    window.addWidgetToVLayout(info)
+
+    #Display
+    display = Display()
+    window.addWidgetToVLayout(display)
+
+    #Grid
+    buttonsGrid = ButtonsGrid(display)
+    window.vLayout.addLayout(buttonsGrid)
+
+
     #Executa tudo
+    window.adjustFixedSize()
     window.show()
     app.exec()
