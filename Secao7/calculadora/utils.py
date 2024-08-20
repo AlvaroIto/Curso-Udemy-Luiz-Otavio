@@ -12,7 +12,7 @@ def isValidNumber(string: str):
         valid = True
     except ValueError:
         valid = False
-    return False
+    return valid
 
 def isEmpty(string: str):
     return len(string) == 0
