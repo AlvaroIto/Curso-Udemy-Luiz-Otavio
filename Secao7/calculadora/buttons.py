@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QPushButton, QGridLayout
 from PySide6.QtCore import Slot
 from variables import MEDIUM_FONTE_SIZE
-from utils import isNumOrDot, isEmpty, isValidNumber
+from utils import isNumOrDot, isEmpty, isValidNumber, convertToNumber
 import math
 
 from typing import TYPE_CHECKING
@@ -59,7 +59,7 @@ class ButtonsGrid(QGridLayout):
 
     def _makeGrid(self):
         self.display.eqPressed.connect(self._eq)
-        self.display.delPressed.connect(self.display.backspace)
+        self.display.delPressed.connect(self._backspace)
         self.display.clearPressed.connect(self._clear)
         self.display.inputPressed.connect(self._insertToDisplay)
         self.display.operatorPressed.connect(self._configLeftOp)
@@ -88,7 +88,7 @@ class ButtonsGrid(QGridLayout):
             self._connectButtonClicked(button, self._clear)
         
         if text == '◀':
-            self._connectButtonClicked(button, self.display.backspace)        
+            self._connectButtonClicked(button, self._backspace)        
 
         if text == 'N':
             self._connectButtonClicked(button, self._invertNumber)  
@@ -115,8 +115,8 @@ class ButtonsGrid(QGridLayout):
         if not isValidNumber(displayText):
             return
 
-        newNumber = -float(displayText)        
-        self.display.setText(str(newNumber))
+        number = convertToNumber(displayText) * -1
+        self.display.setText(str(number))
 
     @Slot()
     def _insertToDisplay(self, text):
@@ -126,6 +126,8 @@ class ButtonsGrid(QGridLayout):
             return
         
         self.display.insert(text)
+        self.display.setFocus()
+        
 
     @Slot()
     def _clear(self):
@@ -134,11 +136,13 @@ class ButtonsGrid(QGridLayout):
         self._op = None
         self.equation = self._equationInitialValue
         self.display.clear()
+        self.display.setFocus()
 
     @Slot()
     def _configLeftOp(self, text):
         displayText = self.display.text() #Deverá ser meu número _left
         self.display.clear() #limpa o display
+        self.display.setFocus()
 
         #Se a pessoa clicou no operador sem configurar qualquer número
         if not isValidNumber(displayText) and self._left is None:
@@ -147,7 +151,7 @@ class ButtonsGrid(QGridLayout):
         
         #Se houver algo no número da esquerda, não fazemos nada. Aguardamos o número da direita
         if self._left is None:
-            self._left = float(displayText)
+            self._left = convertToNumber(displayText)
         
     
         self._op = text
@@ -157,16 +161,16 @@ class ButtonsGrid(QGridLayout):
     def _eq(self):
         displayText = self.display.text()
 
-        if not isValidNumber(displayText):
+        if not isValidNumber(displayText) or self._left is None:
             self._showError('Conta incompleta.')
             return
         
-        self._right = float(displayText)
+        self._right = convertToNumber(displayText)
         self.equation = f'{self._left} {self._op} {self._right}'
         result = 'Error'
 
         try:
-            if '^' in self.equation and isinstance(self._left, float):
+            if '^' in self.equation and isinstance(self._left, int | float):
                 result = math.pow(self._left, self._right)
             else:
                 result = eval(self.equation)
@@ -179,21 +183,30 @@ class ButtonsGrid(QGridLayout):
         self.info.setText(f'{self.equation} = {result}')
         self._left = result
         self._right = None
+        self.display.setFocus()
 
         if result == 'Error':
             self._left = None
+
+    @Slot()
+    def _backspace(self):
+        self.display.backspace()
+        self.display.setFocus()
 
     def _makeDialog(self, text):
         msgBox = self.window.makeMsgBox()
         msgBox.setText(text)
         return msgBox
 
+
     def _showError(self, text):
         msgBox = self._makeDialog(text)
         msgBox.setIcon(msgBox.Icon.Critical)
         msgBox.exec()
+        self.display.setFocus()
     
     def _showInfo(self, text):
         msgBox = self._makeDialog(text)
         msgBox.setIcon(msgBox.Icon.Information)
         msgBox.exec()
+        self.display.setFocus()
