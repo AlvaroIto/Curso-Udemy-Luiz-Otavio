@@ -13,13 +13,14 @@ for row in cursor.fetchall():
     _id, name, weight = row
     print(_id, name, weight)
 
-
 print()
+
 
 cursor.execute(
     f'SELECT * FROM {TABLE_NAME} '
-    'WHERE id = "3"'
+    'WHERE id = "2"'
 )
+
 row = cursor.fetchone()
 _id, name, weight = row
 print(_id, name, weight)
